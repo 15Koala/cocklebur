@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<configuration>
+<!-- Need to be modified by quick development-->
+
+<property>
+    <name>cocklebur.host.list</name>
+    <value>host1:10010,host2:10020,host3:10030,host4:10040,host5:10050</value>
+    <description>
+    the list of node's hostname, split with ','. 
+    hostname:cocklebur_port, election_port = cocklebur_port + 1 
+    </description>
+</property>
+<property>
+    <name>cocklebur.data.dir</name>
+    <value>data</value>
+    <description>
+     where snapshot palce.
+    </description>
+</property>
+<property>
+    <name>cocklebur.server.address</name>
+    <value>host1:10010</value>
+    <description>
+    cocklebur instance's ip and port
+    </description>
+</property>
+
+</configuration>
