@@ -8,23 +8,58 @@
     <name>cocklebur.host.list</name>
     <value>host1:10010,host2:10020,host3:10030,host4:10040,host5:10050</value>
     <description>
-    the list of node's hostname, split with ','. 
-    hostname:cocklebur_port, election_port = cocklebur_port + 1 
+    cocklebur集群节点列表，每个节点用英文逗号隔开，可以使用ip或者/etc/hosts中的映射名称。端口只需要写一个，每个节点将会占用包含该端口的三个连续端口。这三个端口分别是： port 数据服务端口，port+1 选举服务端口，port + 2 心跳服务端口。
     </description>
 </property>
 <property>
     <name>cocklebur.data.dir</name>
     <value>data</value>
     <description>
-     where snapshot palce.
+     存放节点快照和日志的目录。需要读写权限。
     </description>
 </property>
 <property>
     <name>cocklebur.server.address</name>
     <value>host5:10050</value>
     <description>
-    cocklebur instance's ip and port
+    本机ip和数据服务端口。
     </description>
 </property>
 
+<property>
+    <name>cocklebur.election.acklock</name>
+    <value>10000</value>
+    <description>
+    应答锁超时，follower向leader保证不再接受其他人的换票行为的锁的超时时间，单位毫秒.
+    </description>
+</property>
+<property>
+    <name>cocklebur.election.timeout</name>
+    <value>10000</value>
+    <description>
+    当次选举超时, 选举的参与者得知超过半数节点之后发现自己不可能成为leader则会等待一段时间，直到有节点向自己发送确认信息。如果超时则发起下一次选举。
+    </description>
+</property>
+<property>
+    <name>cocklebur.follow.timeout</name>
+    <value>5000</value>
+    <description>
+    follower发送心跳超时时间，单位毫秒。
+    超时之后变为looking状态。
+    </description>
+</property>
+<property>
+    <name>cocklebur.follow.lease</name>
+    <value>10000</value>
+    <description>
+    follower的组约时间，单位毫秒。
+    </description>
+</property>
+<property>
+    <name>cocklebur.follow.heatbeat.interval</name>
+    <value>2000</value>
+    <description>
+    follower心跳时间间隔，单位毫秒。
+    </description>
+</property>
 </configuration>

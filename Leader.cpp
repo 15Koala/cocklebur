@@ -37,6 +37,8 @@ void Leader::leadering() {
 
     int flag = 0;
 
+    long lease_time_out = Configuration::getLong("cocklebur.follow.lease");
+
     while( !d_stat_stop ) {
 	//cheching lease
 	cur_timestamp = get_cur_timestamp();
@@ -51,8 +53,8 @@ void Leader::leadering() {
 	map< string, long >::iterator it = d_lease_mapping.begin();
 	for( ; it != d_lease_mapping.end(); ++it ) {
 	    if( it->first == d_cocklebur->getConfMyIp() ) continue;
-	    cout<<"_DEBUG: Check "<<it->first<<"'s lease, "<<10000-(cur_timestamp-it->second)<<"ms left."<<endl;
-	    if( cur_timestamp - it->second > 10000 ) d_lease_mapping.erase(it);
+	    cout<<"_DEBUG: Check "<<it->first<<"'s lease, "<<lease_time_out -(cur_timestamp-it->second)<<"ms left."<<endl;
+	    if( cur_timestamp - it->second > lease_time_out ) d_lease_mapping.erase(it);
 	}
 	pthread_rwlock_unlock( &m_lease_mapping );
 	sleep(1);

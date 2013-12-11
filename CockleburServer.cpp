@@ -39,5 +39,6 @@ void *startCockleburServer(void * p) {
     cout<<"_DEBUG: Leader server started listen at port "<<port<<endl;
     delete l_arg;
     server.serve();
+    // this function never returns
 
 }

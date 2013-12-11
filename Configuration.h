@@ -21,6 +21,7 @@ public:
     static map<string,string> & getConfigMapping(); //< return a map
     static void init(const string & );//< initial configuration
     static string get(const string & key);
+    static long getLong(const string & key);
     static void set(const string & key, const string & value);
 };
 #endif

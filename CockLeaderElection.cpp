@@ -98,8 +98,9 @@ void CockLeaderElection::lookForLeader() {
 
 	if( d_cocklebur->ack_get_lock() ) {
 	    cout<<"_DEBUG: Locked myself, waiting for leader."<<endl;
-	    int time_out_cnt = 0;//TODO conf
-	    while( d_cocklebur->getCurNodeMode() == LOOKING && time_out_cnt <=10 ) {
+	    int time_out_cnt = 0;
+	    while( d_cocklebur->getCurNodeMode() == LOOKING && \
+		   time_out_cnt <= Configuration::getLong("cocklebur.election.acklock") / 1000 ) {
 		sleep(1);
 		++ time_out_cnt;
 	    }
@@ -120,9 +121,9 @@ void CockLeaderElection::lookForLeader() {
 
 	    ele_client.exchange( _voter, d_voter, target_host ); // exchange vote
 
-	    if( _voter->my_host_name == "" ) cout<<"_DEBUG: Failed to exchange vote with "<<target_host<<"."<<endl;
+	    if( "" == _voter->my_host_name ) cout<<"_DEBUG: Failed to exchange vote with "<<target_host<<"."<<endl;
 	    // dead or locked
-	    if( _voter->my_host_name == "" ) continue;
+	    if( "" == _voter->my_host_name ) continue;
 	    // too bad, my vote is expired. so break and have another lookForLeader
 	    if( _voter->logical_clock > getLogicalClock() ) {
 		logicalClockTick( _voter->logical_clock - 1 );
@@ -195,7 +196,8 @@ void CockLeaderElection::lookForLeader() {
 		// wait to be leadered.
 		cout<<"_DEBUG: Waiting leader ( "<<d_voter.rec_host<<" ) sending ack packet."<<endl;
 		int time_out_cnt = 0;
-		while( d_cocklebur->getCurNodeMode() == LOOKING && time_out_cnt <= 10 ) {
+		while( d_cocklebur->getCurNodeMode() == LOOKING && \
+		       time_out_cnt <= Configuration::getLong( "cocklebur.election.timeout" ) / 1000 ) {
 		    sleep(1);
 		    ++ time_out_cnt;
 		}

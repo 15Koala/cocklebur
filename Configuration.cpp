@@ -1,6 +1,10 @@
 #include "Configuration.h"
+
+#include <iostream>
 #include "rapidxml.hpp"
 #include "rapidxml_utils.hpp"
+
+using namespace std;
 using namespace rapidxml;
 
 map<string,string> Configuration::d_configMap;// initial static member d_configMap
@@ -58,11 +62,18 @@ void Configuration::trim(string & s, char ch){
 }
 string Configuration::get(const string & key){
     map<string,string>::iterator it = d_configMap.find(key);
-    if(it != d_configMap.end())
+    if(it != d_configMap.end()) {
 	return d_configMap[key];
+    }
     else
 	return "";
 }
+
 void Configuration::set(const string & key, const string & value){
     d_configMap[key] = value;
+}
+// return a long item
+long Configuration::getLong(const string & key) {
+    long x = atol( Configuration::get( key ).c_str() );
+    return x;
 }

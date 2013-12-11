@@ -23,7 +23,7 @@ void Follower::following() {
     long start_timestamp = get_cur_timestamp();
 
     while( !d_stat_stop ) {
-
+	// heart beat
 	cout<<"_DEBUG: Follower "<<d_cocklebur->getConfMyIp()<<" keep alive for "<<\
 	    (get_cur_timestamp()-start_timestamp)/1000<<"s."<<endl;
 	int retry_num = 0;
@@ -32,7 +32,7 @@ void Follower::following() {
 	message.my_host_name = d_cocklebur->getConfMyIp();
 	message.cur_node_mode = d_cocklebur->getCurNodeMode();
 	while( !d_cock_client->ping2( _message, message, leader ) ){
-	    if( ++retry_num > 5 ) {//TODO conf
+	    if( ++retry_num > Configuration::getLong("cocklebur.follow.timeout") / 1000 ) {
 		_message.my_host_name = "";
 		break;
 	    }
@@ -55,7 +55,7 @@ void Follower::following() {
 
 	}
 
-	sleep(1);
+	sleep( Configuration::getLong("cocklebur.follow.heatbeat.interval") / 1000 );
     }//while
 }
 void Follower::syncData(){}
