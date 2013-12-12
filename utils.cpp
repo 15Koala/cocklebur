@@ -4,7 +4,23 @@
 #include <iostream>
 #include <sys/time.h>
 #include <sys/vfs.h>
+
+
+#include <thrift/protocol/TBinaryProtocol.h>
+#include <thrift/server/TSimpleServer.h>
+#include <thrift/transport/TServerSocket.h>
+#include <thrift/transport/TBufferTransports.h>
+
+#include "gen-cpp/data_holder_types.h"
+
+using namespace ::apache::thrift;
+using namespace ::apache::thrift::protocol;
+using namespace ::apache::thrift::transport;
+using namespace ::apache::thrift::server;
+ 
+using boost::shared_ptr;
 using namespace std;
+
 void str_split(vector<string> & vec, const string & s, char sep){
     int last = 0;
     for(int i=0; i <= s.size(); i++){
@@ -60,3 +76,24 @@ long get_cur_timestamp(){
      return tv.tv_sec * 1000 + tv.tv_usec / 1000;
 }
 
+string get_seq_encode(const DataTree & ts) {
+    
+    TMemoryBuffer* buffer = new TMemoryBuffer;
+    boost::shared_ptr<TTransport> trans(buffer);
+    TBinaryProtocol protocol(trans);
+    ts.write(&protocol);
+    uint8_t* buf;
+    uint32_t size;
+    buffer->getBuffer(&buf, &size);
+    return std::string((char*)buf, (unsigned int)size);
+    
+}
+
+bool get_seq_decode(const string &buff, DataTree * ts) {
+    TMemoryBuffer* buffer = new TMemoryBuffer;
+    buffer->write((const uint8_t*)buff.data(), buff.size());
+    boost::shared_ptr<TTransport> trans(buffer);
+    TBinaryProtocol protocol(trans);
+    ts->read(&protocol);
+    return true;
+}

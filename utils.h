@@ -2,6 +2,8 @@
 #define _UTILS_H
 #include <vector>
 #include <string>
+
+class DataTree;
 using namespace std;
 // use case
 /*
@@ -30,4 +32,8 @@ int xid_get_high_32(long xid);
 int xid_get_low_32(long xid);
 
 long get_cur_timestamp();
+
+string get_seq_encode( const DataTree & ts);
+bool get_seq_decode(const string & buff, DataTree * ts);
+
 #endif
