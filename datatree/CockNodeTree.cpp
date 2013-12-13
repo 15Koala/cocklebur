@@ -30,10 +30,10 @@ CockNodeTree::CockNodeTree( long xid ) {
     string str_hex_xid;
     xid_to_hex_string( str_hex_xid, d_data_tree->xid );
     // snapshot file for data tree
-    string snap_file_name = str_hex_xid + ".csnapshot";
+    string snap_file_name = "./data/" + str_hex_xid + ".csnapshot";
     this->snapShot( snap_file_name );
     // log file for snapshot
-    string log_file_name = str_hex_xid + ".clog";
+    string log_file_name = "./data/" + str_hex_xid + ".clog";
     d_log_file = new CLogFile( log_file_name, d_data_tree->xid );
 }
 
