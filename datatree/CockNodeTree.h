@@ -17,14 +17,17 @@ using namespace std;
 class Node;
 class LogEntry;
 class DataTree;
+class CLogFile;
+
 class CockNodeTree {
 
 private:
     DataTree * d_data_tree;//< a pointer holder of the CockNodeTree
+    CLogFile * d_log_file;//< a log file for this data tree
     
     void readSnapShot(); /// read snapshot file.
     void replayLogs( const vector < LogEntry > & log_entries ); /// replay logs.
-    void xid_plus(); // xid ++
+    long xid_plus(); // xid ++
     bool checkTree(); /// check the data node tree is the newest or not.
 
     CockNodeTree();
@@ -53,7 +56,7 @@ public:
 
     // Backup
     void snapShot( const string & file_name);
-    void logAppend( const LogEntry & log_entry , const string & file_name );
+    void logAppend( const LogEntry & log_entry );
 
     // stat
     string toString();

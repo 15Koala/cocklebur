@@ -4,6 +4,7 @@
 #include <string>
 
 class DataTree;
+class LogEntry;
 using namespace std;
 // use case
 /*
@@ -35,5 +36,7 @@ long get_cur_timestamp();
 
 string get_seq_encode( const DataTree & ts);
 bool get_seq_decode(const string & buff, DataTree * ts);
+string get_seq_encode( const LogEntry & ts);
+bool get_seq_decode(const string & buff, LogEntry * ts);
 
 #endif

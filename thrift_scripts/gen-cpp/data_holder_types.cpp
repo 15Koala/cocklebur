@@ -10,8 +10,8 @@
 
 
 
-const char* LogEntry::ascii_fingerprint = "6B0CD68886A371B59CE1B9EDCF067801";
-const uint8_t LogEntry::binary_fingerprint[16] = {0x6B,0x0C,0xD6,0x88,0x86,0xA3,0x71,0xB5,0x9C,0xE1,0xB9,0xED,0xCF,0x06,0x78,0x01};
+const char* LogEntry::ascii_fingerprint = "30385074F1AB07974C5EA28F52541C30";
+const uint8_t LogEntry::binary_fingerprint[16] = {0x30,0x38,0x50,0x74,0xF1,0xAB,0x07,0x97,0x4C,0x5E,0xA2,0x8F,0x52,0x54,0x1C,0x30};
 
 uint32_t LogEntry::read(::apache::thrift::protocol::TProtocol* iprot) {
 
@@ -50,9 +50,17 @@ uint32_t LogEntry::read(::apache::thrift::protocol::TProtocol* iprot) {
         }
         break;
       case 3:
-        if (ftype == ::apache::thrift::protocol::T_STRING) {
-          xfer += iprot->readString(this->oper);
+        if (ftype == ::apache::thrift::protocol::T_BYTE) {
+          xfer += iprot->readByte(this->oper);
           this->__isset.oper = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
+      case 4:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->content);
+          this->__isset.content = true;
         } else {
           xfer += iprot->skip(ftype);
         }
@@ -81,8 +89,12 @@ uint32_t LogEntry::write(::apache::thrift::protocol::TProtocol* oprot) const {
   xfer += oprot->writeI64(this->ts);
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("oper", ::apache::thrift::protocol::T_STRING, 3);
-  xfer += oprot->writeString(this->oper);
+  xfer += oprot->writeFieldBegin("oper", ::apache::thrift::protocol::T_BYTE, 3);
+  xfer += oprot->writeByte(this->oper);
+  xfer += oprot->writeFieldEnd();
+
+  xfer += oprot->writeFieldBegin("content", ::apache::thrift::protocol::T_STRING, 4);
+  xfer += oprot->writeString(this->content);
   xfer += oprot->writeFieldEnd();
 
   xfer += oprot->writeFieldStop();
@@ -95,11 +107,12 @@ void swap(LogEntry &a, LogEntry &b) {
   swap(a.xid, b.xid);
   swap(a.ts, b.ts);
   swap(a.oper, b.oper);
+  swap(a.content, b.content);
   swap(a.__isset, b.__isset);
 }
 
-const char* Node::ascii_fingerprint = "59C1C05EFC689C35A13EED304D938C57";
-const uint8_t Node::binary_fingerprint[16] = {0x59,0xC1,0xC0,0x5E,0xFC,0x68,0x9C,0x35,0xA1,0x3E,0xED,0x30,0x4D,0x93,0x8C,0x57};
+const char* Node::ascii_fingerprint = "FE69B4D3C6F0582846BA70AA4D055D85";
+const uint8_t Node::binary_fingerprint[16] = {0xFE,0x69,0xB4,0xD3,0xC6,0xF0,0x58,0x28,0x46,0xBA,0x70,0xAA,0x4D,0x05,0x5D,0x85};
 
 uint32_t Node::read(::apache::thrift::protocol::TProtocol* iprot) {
 
@@ -182,6 +195,14 @@ uint32_t Node::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
+      case 7:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->path);
+          this->__isset.path = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -230,6 +251,10 @@ uint32_t Node::write(::apache::thrift::protocol::TProtocol* oprot) const {
   xfer += oprot->writeI64(this->data_version);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("path", ::apache::thrift::protocol::T_STRING, 7);
+  xfer += oprot->writeString(this->path);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -243,11 +268,12 @@ void swap(Node &a, Node &b) {
   swap(a.mtime, b.mtime);
   swap(a.data, b.data);
   swap(a.data_version, b.data_version);
+  swap(a.path, b.path);
   swap(a.__isset, b.__isset);
 }
 
-const char* DataTree::ascii_fingerprint = "16868C5EAD11733134E2BC8FE688F3A2";
-const uint8_t DataTree::binary_fingerprint[16] = {0x16,0x86,0x8C,0x5E,0xAD,0x11,0x73,0x31,0x34,0xE2,0xBC,0x8F,0xE6,0x88,0xF3,0xA2};
+const char* DataTree::ascii_fingerprint = "6CFB3B13C6E1C5AE61CA1F93297D1D8D";
+const uint8_t DataTree::binary_fingerprint[16] = {0x6C,0xFB,0x3B,0x13,0xC6,0xE1,0xC5,0xAE,0x61,0xCA,0x1F,0x93,0x29,0x7D,0x1D,0x8D};
 
 uint32_t DataTree::read(::apache::thrift::protocol::TProtocol* iprot) {
 

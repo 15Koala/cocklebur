@@ -17,26 +17,28 @@
 
 
 typedef struct _LogEntry__isset {
-  _LogEntry__isset() : xid(false), ts(false), oper(false) {}
+  _LogEntry__isset() : xid(false), ts(false), oper(false), content(false) {}
   bool xid;
   bool ts;
   bool oper;
+  bool content;
 } _LogEntry__isset;
 
 class LogEntry {
  public:
 
-  static const char* ascii_fingerprint; // = "6B0CD68886A371B59CE1B9EDCF067801";
-  static const uint8_t binary_fingerprint[16]; // = {0x6B,0x0C,0xD6,0x88,0x86,0xA3,0x71,0xB5,0x9C,0xE1,0xB9,0xED,0xCF,0x06,0x78,0x01};
+  static const char* ascii_fingerprint; // = "30385074F1AB07974C5EA28F52541C30";
+  static const uint8_t binary_fingerprint[16]; // = {0x30,0x38,0x50,0x74,0xF1,0xAB,0x07,0x97,0x4C,0x5E,0xA2,0x8F,0x52,0x54,0x1C,0x30};
 
-  LogEntry() : xid(0), ts(0), oper() {
+  LogEntry() : xid(0), ts(0), oper(0), content() {
   }
 
   virtual ~LogEntry() throw() {}
 
   int64_t xid;
   int64_t ts;
-  std::string oper;
+  int8_t oper;
+  std::string content;
 
   _LogEntry__isset __isset;
 
@@ -48,8 +50,12 @@ class LogEntry {
     ts = val;
   }
 
-  void __set_oper(const std::string& val) {
+  void __set_oper(const int8_t val) {
     oper = val;
+  }
+
+  void __set_content(const std::string& val) {
+    content = val;
   }
 
   bool operator == (const LogEntry & rhs) const
@@ -59,6 +65,8 @@ class LogEntry {
     if (!(ts == rhs.ts))
       return false;
     if (!(oper == rhs.oper))
+      return false;
+    if (!(content == rhs.content))
       return false;
     return true;
   }
@@ -76,22 +84,23 @@ class LogEntry {
 void swap(LogEntry &a, LogEntry &b);
 
 typedef struct _Node__isset {
-  _Node__isset() : children(false), parent(false), ctime(false), mtime(false), data(false), data_version(false) {}
+  _Node__isset() : children(false), parent(false), ctime(false), mtime(false), data(false), data_version(false), path(false) {}
   bool children;
   bool parent;
   bool ctime;
   bool mtime;
   bool data;
   bool data_version;
+  bool path;
 } _Node__isset;
 
 class Node {
  public:
 
-  static const char* ascii_fingerprint; // = "59C1C05EFC689C35A13EED304D938C57";
-  static const uint8_t binary_fingerprint[16]; // = {0x59,0xC1,0xC0,0x5E,0xFC,0x68,0x9C,0x35,0xA1,0x3E,0xED,0x30,0x4D,0x93,0x8C,0x57};
+  static const char* ascii_fingerprint; // = "FE69B4D3C6F0582846BA70AA4D055D85";
+  static const uint8_t binary_fingerprint[16]; // = {0xFE,0x69,0xB4,0xD3,0xC6,0xF0,0x58,0x28,0x46,0xBA,0x70,0xAA,0x4D,0x05,0x5D,0x85};
 
-  Node() : parent(), ctime(0), mtime(0), data(), data_version(0) {
+  Node() : parent(), ctime(0), mtime(0), data(), data_version(0), path() {
   }
 
   virtual ~Node() throw() {}
@@ -102,6 +111,7 @@ class Node {
   int64_t mtime;
   std::string data;
   int64_t data_version;
+  std::string path;
 
   _Node__isset __isset;
 
@@ -129,6 +139,10 @@ class Node {
     data_version = val;
   }
 
+  void __set_path(const std::string& val) {
+    path = val;
+  }
+
   bool operator == (const Node & rhs) const
   {
     if (!(children == rhs.children))
@@ -142,6 +156,8 @@ class Node {
     if (!(data == rhs.data))
       return false;
     if (!(data_version == rhs.data_version))
+      return false;
+    if (!(path == rhs.path))
       return false;
     return true;
   }
@@ -168,8 +184,8 @@ typedef struct _DataTree__isset {
 class DataTree {
  public:
 
-  static const char* ascii_fingerprint; // = "16868C5EAD11733134E2BC8FE688F3A2";
-  static const uint8_t binary_fingerprint[16]; // = {0x16,0x86,0x8C,0x5E,0xAD,0x11,0x73,0x31,0x34,0xE2,0xBC,0x8F,0xE6,0x88,0xF3,0xA2};
+  static const char* ascii_fingerprint; // = "6CFB3B13C6E1C5AE61CA1F93297D1D8D";
+  static const uint8_t binary_fingerprint[16]; // = {0x6C,0xFB,0x3B,0x13,0xC6,0xE1,0xC5,0xAE,0x61,0xCA,0x1F,0x93,0x29,0x7D,0x1D,0x8D};
 
   DataTree() : xid(0) {
   }

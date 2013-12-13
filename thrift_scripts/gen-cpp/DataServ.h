@@ -7,13 +7,7 @@
 #ifndef DataServ_H
 #define DataServ_H
 
-#include <thrift/transport/TBufferTransports.h>
-#include <tr1/functional>
-namespace apache { namespace thrift { namespace async {
-class TAsyncChannel;
-}}}
 #include <thrift/TDispatchProcessor.h>
-#include <thrift/async/TAsyncDispatchProcessor.h>
 #include "data_holder_types.h"
 
 
@@ -201,7 +195,6 @@ class DataServ_nodeCreate_presult {
   _DataServ_nodeCreate_presult__isset __isset;
 
   uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
-  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
 };
 
@@ -310,7 +303,6 @@ class DataServ_nodeDelete_presult {
   _DataServ_nodeDelete_presult__isset __isset;
 
   uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
-  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
 };
 
@@ -419,7 +411,6 @@ class DataServ_nodeExist_presult {
   _DataServ_nodeExist_presult__isset __isset;
 
   uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
-  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
 };
 
@@ -528,7 +519,6 @@ class DataServ_getData_presult {
   _DataServ_getData_presult__isset __isset;
 
   uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
-  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
 };
 
@@ -626,7 +616,6 @@ class DataServ_setData_presult {
 
 
   uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
-  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
 };
 
@@ -735,7 +724,6 @@ class DataServ_getChildren_presult {
   _DataServ_getChildren_presult__isset __isset;
 
   uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
-  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
 };
 
@@ -830,7 +818,6 @@ class DataServ_getDataTree_presult {
   _DataServ_getDataTree_presult__isset __isset;
 
   uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
-  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
 };
 
@@ -939,7 +926,6 @@ class DataServ_getLogEntryList_presult {
   _DataServ_getLogEntryList_presult__isset __isset;
 
   uint32_t read(::apache::thrift::protocol::TProtocol* iprot);
-  uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
 };
 
@@ -1125,202 +1111,6 @@ class DataServMultiface : virtual public DataServIf {
     return;
   }
 
-};
-
-class DataServCobClient;
-
-class DataServCobClIf {
- public:
-  virtual ~DataServCobClIf() {}
-  virtual void nodeCreate(std::tr1::function<void(DataServCobClient* client)> cob, const std::string& path, const bool isBlocked) = 0;
-  virtual void nodeDelete(std::tr1::function<void(DataServCobClient* client)> cob, const std::string& path) = 0;
-  virtual void nodeExist(std::tr1::function<void(DataServCobClient* client)> cob, const std::string& path) = 0;
-  virtual void getData(std::tr1::function<void(DataServCobClient* client)> cob, const std::string& path) = 0;
-  virtual void setData(std::tr1::function<void(DataServCobClient* client)> cob, const std::string& path, const std::string& data) = 0;
-  virtual void getChildren(std::tr1::function<void(DataServCobClient* client)> cob, const std::string& path) = 0;
-  virtual void getDataTree(std::tr1::function<void(DataServCobClient* client)> cob) = 0;
-  virtual void getLogEntryList(std::tr1::function<void(DataServCobClient* client)> cob, const int64_t xid) = 0;
-};
-
-class DataServCobSvIf {
- public:
-  virtual ~DataServCobSvIf() {}
-  virtual void nodeCreate(std::tr1::function<void(int32_t const& _return)> cob, const std::string& path, const bool isBlocked) = 0;
-  virtual void nodeDelete(std::tr1::function<void(int32_t const& _return)> cob, const std::string& path) = 0;
-  virtual void nodeExist(std::tr1::function<void(bool const& _return)> cob, const std::string& path) = 0;
-  virtual void getData(std::tr1::function<void(std::string const& _return)> cob, const std::string& path) = 0;
-  virtual void setData(std::tr1::function<void()> cob, const std::string& path, const std::string& data) = 0;
-  virtual void getChildren(std::tr1::function<void(std::vector<Node>  const& _return)> cob, const std::string& path) = 0;
-  virtual void getDataTree(std::tr1::function<void(DataTree const& _return)> cob) = 0;
-  virtual void getLogEntryList(std::tr1::function<void(std::vector<LogEntry>  const& _return)> cob, const int64_t xid) = 0;
-};
-
-class DataServCobSvIfFactory {
- public:
-  typedef DataServCobSvIf Handler;
-
-  virtual ~DataServCobSvIfFactory() {}
-
-  virtual DataServCobSvIf* getHandler(const ::apache::thrift::TConnectionInfo& connInfo) = 0;
-  virtual void releaseHandler(DataServCobSvIf* /* handler */) = 0;
-};
-
-class DataServCobSvIfSingletonFactory : virtual public DataServCobSvIfFactory {
- public:
-  DataServCobSvIfSingletonFactory(const boost::shared_ptr<DataServCobSvIf>& iface) : iface_(iface) {}
-  virtual ~DataServCobSvIfSingletonFactory() {}
-
-  virtual DataServCobSvIf* getHandler(const ::apache::thrift::TConnectionInfo&) {
-    return iface_.get();
-  }
-  virtual void releaseHandler(DataServCobSvIf* /* handler */) {}
-
- protected:
-  boost::shared_ptr<DataServCobSvIf> iface_;
-};
-
-class DataServCobSvNull : virtual public DataServCobSvIf {
- public:
-  virtual ~DataServCobSvNull() {}
-  void nodeCreate(std::tr1::function<void(int32_t const& _return)> cob, const std::string& /* path */, const bool /* isBlocked */) {
-    int32_t _return = 0;
-    return cob(_return);
-  }
-  void nodeDelete(std::tr1::function<void(int32_t const& _return)> cob, const std::string& /* path */) {
-    int32_t _return = 0;
-    return cob(_return);
-  }
-  void nodeExist(std::tr1::function<void(bool const& _return)> cob, const std::string& /* path */) {
-    bool _return = false;
-    return cob(_return);
-  }
-  void getData(std::tr1::function<void(std::string const& _return)> cob, const std::string& /* path */) {
-    std::string _return;
-    return cob(_return);
-  }
-  void setData(std::tr1::function<void()> cob, const std::string& /* path */, const std::string& /* data */) {
-    return cob();
-  }
-  void getChildren(std::tr1::function<void(std::vector<Node>  const& _return)> cob, const std::string& /* path */) {
-    std::vector<Node>  _return;
-    return cob(_return);
-  }
-  void getDataTree(std::tr1::function<void(DataTree const& _return)> cob) {
-    DataTree _return;
-    return cob(_return);
-  }
-  void getLogEntryList(std::tr1::function<void(std::vector<LogEntry>  const& _return)> cob, const int64_t /* xid */) {
-    std::vector<LogEntry>  _return;
-    return cob(_return);
-  }
-};
-
-class DataServCobClient : virtual public DataServCobClIf {
- public:
-  DataServCobClient(boost::shared_ptr< ::apache::thrift::async::TAsyncChannel> channel, ::apache::thrift::protocol::TProtocolFactory* protocolFactory) :
-    channel_(channel),
-    itrans_(new ::apache::thrift::transport::TMemoryBuffer()),
-    otrans_(new ::apache::thrift::transport::TMemoryBuffer()),
-    piprot_(protocolFactory->getProtocol(itrans_)),
-    poprot_(protocolFactory->getProtocol(otrans_)) {
-    iprot_ = piprot_.get();
-    oprot_ = poprot_.get();
-  }
-  boost::shared_ptr< ::apache::thrift::async::TAsyncChannel> getChannel() {
-    return channel_;
-  }
-  virtual void completed__(bool /* success */) {}
-  void nodeCreate(std::tr1::function<void(DataServCobClient* client)> cob, const std::string& path, const bool isBlocked);
-  void send_nodeCreate(const std::string& path, const bool isBlocked);
-  int32_t recv_nodeCreate();
-  void nodeDelete(std::tr1::function<void(DataServCobClient* client)> cob, const std::string& path);
-  void send_nodeDelete(const std::string& path);
-  int32_t recv_nodeDelete();
-  void nodeExist(std::tr1::function<void(DataServCobClient* client)> cob, const std::string& path);
-  void send_nodeExist(const std::string& path);
-  bool recv_nodeExist();
-  void getData(std::tr1::function<void(DataServCobClient* client)> cob, const std::string& path);
-  void send_getData(const std::string& path);
-  void recv_getData(std::string& _return);
-  void setData(std::tr1::function<void(DataServCobClient* client)> cob, const std::string& path, const std::string& data);
-  void send_setData(const std::string& path, const std::string& data);
-  void recv_setData();
-  void getChildren(std::tr1::function<void(DataServCobClient* client)> cob, const std::string& path);
-  void send_getChildren(const std::string& path);
-  void recv_getChildren(std::vector<Node> & _return);
-  void getDataTree(std::tr1::function<void(DataServCobClient* client)> cob);
-  void send_getDataTree();
-  void recv_getDataTree(DataTree& _return);
-  void getLogEntryList(std::tr1::function<void(DataServCobClient* client)> cob, const int64_t xid);
-  void send_getLogEntryList(const int64_t xid);
-  void recv_getLogEntryList(std::vector<LogEntry> & _return);
- protected:
-  boost::shared_ptr< ::apache::thrift::async::TAsyncChannel> channel_;
-  boost::shared_ptr< ::apache::thrift::transport::TMemoryBuffer> itrans_;
-  boost::shared_ptr< ::apache::thrift::transport::TMemoryBuffer> otrans_;
-  boost::shared_ptr< ::apache::thrift::protocol::TProtocol> piprot_;
-  boost::shared_ptr< ::apache::thrift::protocol::TProtocol> poprot_;
-  ::apache::thrift::protocol::TProtocol* iprot_;
-  ::apache::thrift::protocol::TProtocol* oprot_;
-};
-
-class DataServAsyncProcessor : public ::apache::thrift::async::TAsyncDispatchProcessor {
- protected:
-  boost::shared_ptr<DataServCobSvIf> iface_;
-  virtual void dispatchCall(std::tr1::function<void(bool ok)> cob, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot, const std::string& fname, int32_t seqid);
- private:
-  typedef  void (DataServAsyncProcessor::*ProcessFunction)(std::tr1::function<void(bool ok)>, int32_t, ::apache::thrift::protocol::TProtocol*, ::apache::thrift::protocol::TProtocol*);
-  typedef std::map<std::string, ProcessFunction> ProcessMap;
-  ProcessMap processMap_;
-  void process_nodeCreate(std::tr1::function<void(bool ok)> cob, int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot);
-  void return_nodeCreate(std::tr1::function<void(bool ok)> cob, int32_t seqid, ::apache::thrift::protocol::TProtocol* oprot, void* ctx, const int32_t& _return);
-  void throw_nodeCreate(std::tr1::function<void(bool ok)> cob, int32_t seqid, ::apache::thrift::protocol::TProtocol* oprot, void* ctx, ::apache::thrift::TDelayedException* _throw);
-  void process_nodeDelete(std::tr1::function<void(bool ok)> cob, int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot);
-  void return_nodeDelete(std::tr1::function<void(bool ok)> cob, int32_t seqid, ::apache::thrift::protocol::TProtocol* oprot, void* ctx, const int32_t& _return);
-  void throw_nodeDelete(std::tr1::function<void(bool ok)> cob, int32_t seqid, ::apache::thrift::protocol::TProtocol* oprot, void* ctx, ::apache::thrift::TDelayedException* _throw);
-  void process_nodeExist(std::tr1::function<void(bool ok)> cob, int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot);
-  void return_nodeExist(std::tr1::function<void(bool ok)> cob, int32_t seqid, ::apache::thrift::protocol::TProtocol* oprot, void* ctx, const bool& _return);
-  void throw_nodeExist(std::tr1::function<void(bool ok)> cob, int32_t seqid, ::apache::thrift::protocol::TProtocol* oprot, void* ctx, ::apache::thrift::TDelayedException* _throw);
-  void process_getData(std::tr1::function<void(bool ok)> cob, int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot);
-  void return_getData(std::tr1::function<void(bool ok)> cob, int32_t seqid, ::apache::thrift::protocol::TProtocol* oprot, void* ctx, const std::string& _return);
-  void throw_getData(std::tr1::function<void(bool ok)> cob, int32_t seqid, ::apache::thrift::protocol::TProtocol* oprot, void* ctx, ::apache::thrift::TDelayedException* _throw);
-  void process_setData(std::tr1::function<void(bool ok)> cob, int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot);
-  void return_setData(std::tr1::function<void(bool ok)> cob, int32_t seqid, ::apache::thrift::protocol::TProtocol* oprot, void* ctx);
-  void throw_setData(std::tr1::function<void(bool ok)> cob, int32_t seqid, ::apache::thrift::protocol::TProtocol* oprot, void* ctx, ::apache::thrift::TDelayedException* _throw);
-  void process_getChildren(std::tr1::function<void(bool ok)> cob, int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot);
-  void return_getChildren(std::tr1::function<void(bool ok)> cob, int32_t seqid, ::apache::thrift::protocol::TProtocol* oprot, void* ctx, const std::vector<Node> & _return);
-  void throw_getChildren(std::tr1::function<void(bool ok)> cob, int32_t seqid, ::apache::thrift::protocol::TProtocol* oprot, void* ctx, ::apache::thrift::TDelayedException* _throw);
-  void process_getDataTree(std::tr1::function<void(bool ok)> cob, int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot);
-  void return_getDataTree(std::tr1::function<void(bool ok)> cob, int32_t seqid, ::apache::thrift::protocol::TProtocol* oprot, void* ctx, const DataTree& _return);
-  void throw_getDataTree(std::tr1::function<void(bool ok)> cob, int32_t seqid, ::apache::thrift::protocol::TProtocol* oprot, void* ctx, ::apache::thrift::TDelayedException* _throw);
-  void process_getLogEntryList(std::tr1::function<void(bool ok)> cob, int32_t seqid, ::apache::thrift::protocol::TProtocol* iprot, ::apache::thrift::protocol::TProtocol* oprot);
-  void return_getLogEntryList(std::tr1::function<void(bool ok)> cob, int32_t seqid, ::apache::thrift::protocol::TProtocol* oprot, void* ctx, const std::vector<LogEntry> & _return);
-  void throw_getLogEntryList(std::tr1::function<void(bool ok)> cob, int32_t seqid, ::apache::thrift::protocol::TProtocol* oprot, void* ctx, ::apache::thrift::TDelayedException* _throw);
- public:
-  DataServAsyncProcessor(boost::shared_ptr<DataServCobSvIf> iface) :
-    iface_(iface) {
-    processMap_["nodeCreate"] = &DataServAsyncProcessor::process_nodeCreate;
-    processMap_["nodeDelete"] = &DataServAsyncProcessor::process_nodeDelete;
-    processMap_["nodeExist"] = &DataServAsyncProcessor::process_nodeExist;
-    processMap_["getData"] = &DataServAsyncProcessor::process_getData;
-    processMap_["setData"] = &DataServAsyncProcessor::process_setData;
-    processMap_["getChildren"] = &DataServAsyncProcessor::process_getChildren;
-    processMap_["getDataTree"] = &DataServAsyncProcessor::process_getDataTree;
-    processMap_["getLogEntryList"] = &DataServAsyncProcessor::process_getLogEntryList;
-  }
-
-  virtual ~DataServAsyncProcessor() {}
-};
-
-class DataServAsyncProcessorFactory : public ::apache::thrift::async::TAsyncProcessorFactory {
- public:
-  DataServAsyncProcessorFactory(const ::boost::shared_ptr< DataServCobSvIfFactory >& handlerFactory) :
-      handlerFactory_(handlerFactory) {}
-
-  ::boost::shared_ptr< ::apache::thrift::async::TAsyncProcessor > getProcessor(const ::apache::thrift::TConnectionInfo& connInfo);
-
- protected:
-  ::boost::shared_ptr< DataServCobSvIfFactory > handlerFactory_;
 };
 
 

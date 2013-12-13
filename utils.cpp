@@ -97,3 +97,26 @@ bool get_seq_decode(const string &buff, DataTree * ts) {
     ts->read(&protocol);
     return true;
 }
+
+string get_seq_encode(const LogEntry & ts) {
+    
+    TMemoryBuffer* buffer = new TMemoryBuffer;
+    boost::shared_ptr<TTransport> trans(buffer);
+    TBinaryProtocol protocol(trans);
+    ts.write(&protocol);
+    uint8_t* buf;
+    uint32_t size;
+    buffer->getBuffer(&buf, &size);
+    return std::string((char*)buf, (unsigned int)size);
+    
+}
+
+bool get_seq_decode(const string &buff, LogEntry * ts) {
+    TMemoryBuffer* buffer = new TMemoryBuffer;
+    buffer->write((const uint8_t*)buff.data(), buff.size());
+    boost::shared_ptr<TTransport> trans(buffer);
+    TBinaryProtocol protocol(trans);
+    ts->read(&protocol);
+    return true;
+}
+

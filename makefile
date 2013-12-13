@@ -42,8 +42,8 @@ OPATH = ./obj
 
 PURIFY  = purify -cache_dir=cache -always_use_cache_dir\
 	  -windows=no -log_file=purify.log
-#ALLSRC = $(wildcard *.cpp gen-cpp/*.cpp ../json/*.cpp)
-ALLSRC = $(wildcard *.cpp gen-cpp/*.cpp)
+#ALLSRC = $(wildcard *.cpp gen-cpp/*.cpp datatree/*.cpp)
+ALLSRC = $(wildcard *.cpp gen-cpp/*.cpp datatree/*.cpp)
 ALLOBJS = $(ALLSRC:%.cpp=$(OBJPATH)/%.o)
 OUTPUTOBJ = $(OUTPUTMODULESRC:%.cpp=$(OBJPATH)/%.o)
 OUTPUTSONAME = $(SOLIBBASE)/lib$(OUTPUTMODULE).so
