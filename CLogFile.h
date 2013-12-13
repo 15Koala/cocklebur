@@ -8,6 +8,9 @@
 #ifndef _C_LOGFILE_H
 #define _C_LOGFILE_H
 
+// the max size of LogEntry sequence data
+#define MAX_DATA_BUFFER 1024
+
 #include <string>
 #include <vector>
 
@@ -41,7 +44,7 @@ public:
     // return 
     // 0 success, 1 file_not_found, 2 other
     int appendLog( const LogEntry & log_entry );
-    vector< LogEntry > scanLog( long start, long end );
+    void scanLog( long start, long end, vector< LogEntry > & _log_entries );
 
 };
 
