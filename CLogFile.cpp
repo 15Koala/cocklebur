@@ -10,6 +10,29 @@ using namespace std;
 // open an old file
 CLogFile::CLogFile( const string & file_name ) {
 
+    d_file_name = file_name;
+    vector< string > tmp;
+    str_split( tmp, file_name, '.' );
+    d_start_xid = atol( tmp[0].c_str() );
+
+    fstream fin( file_name.c_str(), ios::binary );
+    unsigned int cur_pos = 0;
+    unsigned int val_len = 0;
+    unsigned int *p_val_len = &val_len;
+    long xid = 0;
+    long * p_xid = &xid;
+    while( !fin.eof() ) {
+	cur_pos += 4;
+	fin.seekg( cur_pos );
+	fin.read( reinterpret_cast< char * >(p_xid), 8 );
+	fin.read( reinterpret_cast< char * >(p_val_len), 4 );
+	cur_pos += val_len;
+	fin.seekg( cur_pos );
+    }
+
+    d_cur_xid = xid;
+    fin.close();
+
 }
 // open a new file
 CLogFile::CLogFile( const string & file_name, long xid ) {
@@ -41,7 +64,28 @@ int CLogFile::appendLog( const LogEntry & log_entry ) {
     fout.close();
 }
 
-vector< LogEntry > CLogFile::scanLog( long start, long end ) {
+void CLogFile::scanLog( long start, long end, vector< LogEntry > & _log_entries ) {
+    
+    fstream fin( d_file_name.c_str(), ios::binary );
+    unsigned int cur_pos = 0;
+    unsigned int val_len = 0;
+    unsigned int *p_val_len = &val_len;
+    long xid = 0;
+    long * p_xid = &xid;
 
+    char * cur_seq_data = new char[MAX_DATA_BUFFER];
+    LogEntry log_entry;
+    LogEntry * p_log_entry = &log_entry;
+    while ( !fin.eof() ) {
+	cur_pos += 4;
+	fin.seekg( cur_pos );
+	fin.read( reinterpret_cast< char * >(p_xid), 8 );
+	fin.read( reinterpret_cast< char * >(p_val_len), 4 );
+	fin.read( cur_seq_data, val_len );
+	get_seq_decode( cur_seq_data, val_len, p_log_entry );
+	_log_entries.push_back( log_entry );
+    }
+
+    fin.close();
 }
 
