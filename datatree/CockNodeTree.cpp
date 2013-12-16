@@ -23,9 +23,7 @@ CockNodeTree::CockNodeTree( long xid ) {
     node.mtime = node.ctime;
     d_data_tree->NodeMap["/"] = node;
 
-    // data version ++ 
     pthread_rwlock_init( &m_xid_lock, NULL );
-    xid_plus();
 
     string str_hex_xid;
     xid_to_hex_string( str_hex_xid, d_data_tree->xid );
@@ -196,21 +194,23 @@ void CockNodeTree::logAppend( const LogEntry & log_entry ) {
 
 string CockNodeTree::toString() {
     stringstream s;
-    s << "->cockNodeTree:" << endl \
-	<< " ->xid: " <<this->d_data_tree->xid << endl \
-	<< " ->nodes: " << endl ;
+    s.clear();
+    s << "{ name=>'cockNodeTree'" \
+	<< ", xid=>" <<this->d_data_tree->xid \
+	<< ", nodes=>[ ";
     map< string, Node >::iterator it = this->d_data_tree->NodeMap.begin();
     for( ; it != d_data_tree->NodeMap.end() ; ++it ) {
-	s<< "  ->" << it->second.path << "," \
-	    << it->second.parent << ","\
-	    << it->second.ctime << ","\
-	    << it->second.mtime << "," \
-	    << it->second.data_version << ", [" ;
+	s<< "{ path=>'" << it->second.path << "', parent=>'" \
+	    << it->second.parent << "', ctime=>"\
+	    << it->second.ctime << ", mtime=>"\
+	    << it->second.mtime << ", data_version=>" \
+	    << it->second.data_version << ", children=>[ " ;
 	set< string >::iterator c_it = it->second.children.begin();
 	for( ; c_it != it->second.children.end(); ++ c_it ) {
 	    s<< *c_it << " ";
 	}
-	s<<"]"<<endl;
+	s<<"] } "<<endl;
     }
+    s<<"] }";
     return s.str();
 }

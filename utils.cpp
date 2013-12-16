@@ -5,6 +5,9 @@
 #include <sys/time.h>
 #include <sys/vfs.h>
 
+#include <sys/types.h>   
+#include <sys/stat.h>   
+#include <unistd.h>
 
 #include <thrift/protocol/TBinaryProtocol.h>
 #include <thrift/server/TSimpleServer.h>
@@ -120,3 +123,18 @@ bool get_seq_decode(const string &buff, LogEntry * ts) {
     return true;
 }
 
+bool get_seq_decode(const char * buff, unsigned int size, LogEntry * ts ) {
+    TMemoryBuffer* buffer = new TMemoryBuffer;
+    buffer->write((const uint8_t*)buff, size);
+    boost::shared_ptr<TTransport> trans(buffer);
+    TBinaryProtocol protocol(trans);
+    ts->read(&protocol);
+    return true;
+
+}
+
+long get_file_size( const string & file_name ) {
+    struct stat buf;
+    int iRet = stat(file_name.c_str(), &buf);
+    return buf.st_size;
+}

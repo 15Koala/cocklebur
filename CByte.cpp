@@ -76,6 +76,19 @@ string CByte::toHexString( const string & x ) {
     }
     return _return;
 }
+string CByte::toHexString( const char * x, unsigned int len) {
+    unsigned int size = len * 2 + 2;
+    string _return( size, 0 );
+    _return[0] = '0';
+    _return[1] = 'x';
+    for( int i = 0; i < len; i++ ) {
+	int low = static_cast< unsigned char >( x[len-i-1] ) % 16;
+	int high = static_cast< unsigned char >( x[len-i-1] ) / 16;
+	_return[size-2*i-1] = ( low > 9 )? low + 87 : low + 48 ;
+	_return[size-2*i-2] = ( high > 9 )? high + 87 : high + 48 ;
+    }
+    return _return;
+}
 
 int CByte::getInt( const string & x ) {
     return static_cast<int>(CByte::getUInt( x ));
@@ -94,7 +107,7 @@ long CByte::getLong( const string & x ) {
 }
 
 unsigned long CByte::getULong( const string & x ) {
-    unsigned int _return = 0;
+    unsigned long  _return = 0;
     for( std::size_t i = 0; i < x.size(); ++i ) {
 	_return += static_cast<unsigned char>(x[x.size()-1-i])*static_cast<unsigned long>(pow( 256, i ));
     }
@@ -113,4 +126,29 @@ float CByte::getFloat( const string & x ) {
     float * _return = 0;
     _return = reinterpret_cast<float*>(p);
     return *_return;
+}
+
+int CByte::getInt( const char * x, size_t len ) {
+    string s(x,len);
+    return CByte::getInt(s);
+}
+unsigned int CByte::getUInt( const char * x, size_t len ) {
+    string s(x,len);
+    return CByte::getUInt(s);
+}
+long CByte::getLong( const char * x, size_t len ) {
+    string s(x,len);
+    return CByte::getLong(s);
+}
+unsigned long CByte::getULong( const char * x, size_t len ) {
+    string s(x,len);
+    return CByte::getULong(s);
+}
+double CByte::getDouble( const char * x, size_t len ) {
+    string s(x,len);
+    return CByte::getDouble(x);
+}
+float CByte::getFloat( const char * x, size_t len ) {
+    string s(x,len);
+    return CByte::getFloat(x);
 }

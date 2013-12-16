@@ -28,6 +28,7 @@ public:
     static string toBytes( float );
 
     static string toHexString( const string & x );
+    static string toHexString( const char * x, unsigned int len);
 
     static int getInt( const string & x );
     static unsigned int getUInt( const string & x );
@@ -35,6 +36,13 @@ public:
     static unsigned long getULong( const string & x );
     static double getDouble( const string & x );
     static float getFloat( const string & x );
+
+    static int getInt( const char * x, size_t len );
+    static unsigned int getUInt( const char * x, size_t len );
+    static long getLong( const char * x, size_t len );
+    static unsigned long getULong( const char * x, size_t len );
+    static double getDouble( const char * x, size_t len );
+    static float getFloat( const char * x, size_t len );
 
 };
 
