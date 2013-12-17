@@ -3,10 +3,10 @@
 #include <fstream>
 #include <sstream>
 
-#include "../gen-cpp/data_holder_types.h"
-#include "../utils_time.h"
-#include "../utils.h"
-#include "../CLogFile.h"
+#include "gen-cpp/data_holder_types.h"
+#include "utils_time.h"
+#include "utils.h"
+#include "CLogFile.h"
 using namespace std;
 
 CockNodeTree::CockNodeTree( long xid ) {

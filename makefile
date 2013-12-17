@@ -8,7 +8,7 @@ ROOT =..
 #[req] the name of compiled library
 LIBNAME = cocklebur
 #[req] the source file with the main function
-MAINSRC = cockleburMain.cpp
+MAINSRC = cocklebur_main.cpp
 #[opt] the source file used for python's invoking
 # PYTHONSRC = 
 #[opt] the head file for so library
@@ -28,7 +28,7 @@ PROJ_L_MEXE=$(PROJ_L)
 # CPPPROJ_L = 
 #[req] include and marco definition for this project
 #e.g. PROJ_I = -I../include -I../../3rdParty/include/boost/ -I/usr/include/python2.6  
-PROJ_I =  -I/usr/local/include 
+PROJ_I =  -I/usr/local/include -I./common 
 #[opt] the special flags for project
 #e.g. PROJ_F = -D_REENTRANT -DFLEX -D_GNU_SOURCE -DLINUX -fpic 
 PROJ_F = -DHAVE_NETINET_IN_H #-v

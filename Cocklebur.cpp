@@ -61,7 +61,7 @@ void Cocklebur::updateHostStat( const Voter * _voter, bool use_lock ) {
     } 
     pthread_rwlock_unlock( &m_host_stat );
 }
-
+//cocklebur constructor
 Cocklebur::Cocklebur(map<string,string> & map_conf){
 
     d_conf = map_conf;
@@ -115,6 +115,15 @@ Cocklebur::~Cocklebur() {
     pthread_rwlock_destroy(&m_cur_node_mode);
     pthread_rwlock_destroy( &m_ack_lock );
 
+}
+
+void Cocklebur::rollLogs( const string & dir_name ) {
+    if( access( d_conf_data_dir.c_str(), 0 ) != 0 ) {
+	// we got nothing from data_dir
+	mkdir(d_conf_data_dir.c_str(), 0775);
+    } else {
+    
+    }
 }
 
 void Cocklebur::initial_in_memory() {  
@@ -175,8 +184,6 @@ void Cocklebur::startCockElectionServer() {
 }
 
 void Cocklebur::run() {
-    // cockleber server, for sync data, reveiveing heartbeat...
-    //startCockServer();
     // cocklebur leader election server, for exchanging voters.
     startCockElectionServer();
     //main process 

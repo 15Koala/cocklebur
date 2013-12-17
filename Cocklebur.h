@@ -163,5 +163,7 @@ public:
     void run();
     // main process of a instance of cocklebur. the last process.
     void process();
+    // roll log files, and recover the CockDataTree
+    void rollLogs( const string & dir_name );
 };
 #endif
