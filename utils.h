@@ -39,6 +39,7 @@ bool get_seq_decode(const string & buff, DataTree * ts);
 string get_seq_encode( const LogEntry & ts);
 bool get_seq_decode(const string & buff, LogEntry * ts);
 bool get_seq_decode(const char * buff, unsigned int size, LogEntry * ts );
+bool get_seq_decode(const char * buff, unsigned int size, DataTree * ts );
 
 long get_file_size( const string & file_name );
 

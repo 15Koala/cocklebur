@@ -46,6 +46,7 @@ public:
     int appendLog( const LogEntry & log_entry );
     void scanLog( long start, long end, vector< LogEntry > & _log_entries );
     void printLogEntries( const vector< LogEntry > & _log_entries );
+    string strLogEntry( const LogEntry & );
 
 };
 

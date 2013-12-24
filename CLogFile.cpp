@@ -1,4 +1,6 @@
 #include "CLogFile.h"
+
+#include <sstream>
 #include <fstream>
 
 #include "CByte.h"
@@ -47,10 +49,7 @@ CLogFile::CLogFile( const string & file_name, long xid ) {
 
 int CLogFile::appendLog( const LogEntry & log_entry ) {
 
-    if( log_entry.oper == 's' )
-	cout<<"_DEBUG: append log ( xid:"<<log_entry.xid<<", ts:"<<log_entry.ts<<", oper:s, content:"<<log_entry.content.size()<<" )"<<endl;
-    else
-	cout<<"_DEBUG: append log ( xid:"<<log_entry.xid<<", ts:"<<log_entry.ts<<", oper:"<<log_entry.oper<<", data_size:"<<log_entry.content<<" )"<<endl;
+    cout<<"_DEBUG: appending log "<<strLogEntry( log_entry )<<endl;
 	
     unsigned int key_length = sizeof(log_entry.xid);
     string seq_val = get_seq_encode( log_entry );
@@ -103,7 +102,18 @@ void CLogFile::printLogEntries( const vector< LogEntry > & _log_entries ) {
     cout<<"{ name=>'LogEntries', content=>[ ";
     vector< LogEntry >::const_iterator it = _log_entries.begin();
     for( ; it != _log_entries.end(); ++it ) {
-	cout<<"{ xid=>"<<it->xid<<", ts=>"<<it->ts<<", oper=>'"<<it->oper<<"', data_size=>"<<it->content.size()<<" }, ";
+	cout<<strLogEntry( *it )<<", ";
     }
     cout<<" ] }"<<endl;
+}
+
+string CLogFile::strLogEntry( const LogEntry & l ) {
+    stringstream s;
+    s<<" { xid=>"<<l.xid<<", ts=>"<<l.ts<<", oper=>'"<<l.oper<<"', ";
+    if( l.oper == 's' ) {
+	s<<"data_size=>"<<l.content.size()<<" }";
+    } else {
+	s<<"content=>'"<<l.content<<"' }";
+    }
+    return s.str();
 }

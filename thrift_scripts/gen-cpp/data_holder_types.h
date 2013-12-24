@@ -17,20 +17,21 @@
 
 
 typedef struct _LogEntry__isset {
-  _LogEntry__isset() : xid(false), ts(false), oper(false), content(false) {}
+  _LogEntry__isset() : xid(false), ts(false), oper(false), content(false), data(false) {}
   bool xid;
   bool ts;
   bool oper;
   bool content;
+  bool data;
 } _LogEntry__isset;
 
 class LogEntry {
  public:
 
-  static const char* ascii_fingerprint; // = "30385074F1AB07974C5EA28F52541C30";
-  static const uint8_t binary_fingerprint[16]; // = {0x30,0x38,0x50,0x74,0xF1,0xAB,0x07,0x97,0x4C,0x5E,0xA2,0x8F,0x52,0x54,0x1C,0x30};
+  static const char* ascii_fingerprint; // = "4F357154737171A99AF402A39E295167";
+  static const uint8_t binary_fingerprint[16]; // = {0x4F,0x35,0x71,0x54,0x73,0x71,0x71,0xA9,0x9A,0xF4,0x02,0xA3,0x9E,0x29,0x51,0x67};
 
-  LogEntry() : xid(0), ts(0), oper(0), content() {
+  LogEntry() : xid(0), ts(0), oper(0), content(), data() {
   }
 
   virtual ~LogEntry() throw() {}
@@ -39,6 +40,7 @@ class LogEntry {
   int64_t ts;
   int8_t oper;
   std::string content;
+  std::string data;
 
   _LogEntry__isset __isset;
 
@@ -58,6 +60,10 @@ class LogEntry {
     content = val;
   }
 
+  void __set_data(const std::string& val) {
+    data = val;
+  }
+
   bool operator == (const LogEntry & rhs) const
   {
     if (!(xid == rhs.xid))
@@ -67,6 +73,8 @@ class LogEntry {
     if (!(oper == rhs.oper))
       return false;
     if (!(content == rhs.content))
+      return false;
+    if (!(data == rhs.data))
       return false;
     return true;
   }

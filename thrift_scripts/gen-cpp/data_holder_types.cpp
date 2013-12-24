@@ -10,8 +10,8 @@
 
 
 
-const char* LogEntry::ascii_fingerprint = "30385074F1AB07974C5EA28F52541C30";
-const uint8_t LogEntry::binary_fingerprint[16] = {0x30,0x38,0x50,0x74,0xF1,0xAB,0x07,0x97,0x4C,0x5E,0xA2,0x8F,0x52,0x54,0x1C,0x30};
+const char* LogEntry::ascii_fingerprint = "4F357154737171A99AF402A39E295167";
+const uint8_t LogEntry::binary_fingerprint[16] = {0x4F,0x35,0x71,0x54,0x73,0x71,0x71,0xA9,0x9A,0xF4,0x02,0xA3,0x9E,0x29,0x51,0x67};
 
 uint32_t LogEntry::read(::apache::thrift::protocol::TProtocol* iprot) {
 
@@ -65,6 +65,14 @@ uint32_t LogEntry::read(::apache::thrift::protocol::TProtocol* iprot) {
           xfer += iprot->skip(ftype);
         }
         break;
+      case 5:
+        if (ftype == ::apache::thrift::protocol::T_STRING) {
+          xfer += iprot->readString(this->data);
+          this->__isset.data = true;
+        } else {
+          xfer += iprot->skip(ftype);
+        }
+        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -97,6 +105,10 @@ uint32_t LogEntry::write(::apache::thrift::protocol::TProtocol* oprot) const {
   xfer += oprot->writeString(this->content);
   xfer += oprot->writeFieldEnd();
 
+  xfer += oprot->writeFieldBegin("data", ::apache::thrift::protocol::T_STRING, 5);
+  xfer += oprot->writeString(this->data);
+  xfer += oprot->writeFieldEnd();
+
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -108,6 +120,7 @@ void swap(LogEntry &a, LogEntry &b) {
   swap(a.ts, b.ts);
   swap(a.oper, b.oper);
   swap(a.content, b.content);
+  swap(a.data, b.data);
   swap(a.__isset, b.__isset);
 }
 

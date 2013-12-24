@@ -27,6 +27,10 @@ private:
     
     void readSnapShot(); /// read snapshot file.
     void replayLogs( const vector < LogEntry > & log_entries ); /// replay logs.
+    int replayEntry( const LogEntry & log_entries ); /// replay log entry
+    // tree operation
+    int _create( const string & path );
+    int _delete( const string & path );
     long xid_plus(); // xid ++
     bool checkTree(); /// check the data node tree is the newest or not.
 
@@ -38,8 +42,8 @@ private:
 public:
     string parseParent( const string & path );
 
-    CockNodeTree( long xid );
-    CockNodeTree( const string & snapshot_dir_path );
+    explicit CockNodeTree( long xid );
+    explicit CockNodeTree( const string & snapshot_dir_path );
     ~CockNodeTree();
 
     // CRUD
@@ -52,7 +56,6 @@ public:
 
     int getChildren( const string & path, set< string >  & _children );
     DataTree getDataTree( );
-    vector < LogEntry > getLogEntry( long xid );
 
     // Backup
     void snapShot( const string & file_name);

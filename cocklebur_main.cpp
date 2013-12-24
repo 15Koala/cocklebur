@@ -5,6 +5,7 @@
 
 //test
 #include "utils_time.h"
+#include "utils.h"
 #include <vector>
 #include "gen-cpp/data_holder_types.h"
 #include "CLogFile.h"
@@ -36,10 +37,14 @@ int main(int argc, char **argv){
     cnt.nodeDelete("/root/c2/c21");
     cout<<cnt.toString()<<endl;
 
-    CLogFile c_log_file("data/0000000000000002.clog");
+    CLogFile c_log_file("data/0000000000000001.clog");
     vector<LogEntry> log_entries;
     c_log_file.scanLog(0,get_cur_timestamp(),log_entries);
     c_log_file.printLogEntries(log_entries);
+
+    CockNodeTree c2("data/0000000000000001.csnapshot");
+    cout<<"-------"<<endl;
+    cout<<c2.toString()<<endl;
 
     return 0;
 }

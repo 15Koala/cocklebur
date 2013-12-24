@@ -101,6 +101,14 @@ bool get_seq_decode(const string &buff, DataTree * ts) {
     return true;
 }
 
+bool get_seq_decode(const char * buff, unsigned int size, DataTree * ts ) {
+    TMemoryBuffer* buffer = new TMemoryBuffer;
+    buffer->write((const uint8_t*)buff, size);
+    boost::shared_ptr<TTransport> trans(buffer);
+    TBinaryProtocol protocol(trans);
+    ts->read(&protocol);
+    return true;
+}
 string get_seq_encode(const LogEntry & ts) {
     
     TMemoryBuffer* buffer = new TMemoryBuffer;
@@ -130,7 +138,6 @@ bool get_seq_decode(const char * buff, unsigned int size, LogEntry * ts ) {
     TBinaryProtocol protocol(trans);
     ts->read(&protocol);
     return true;
-
 }
 
 long get_file_size( const string & file_name ) {

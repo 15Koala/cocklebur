@@ -11,6 +11,7 @@ struct LogEntry {
     2: i64 ts,
     3: byte oper, 
     4: string content,
+    5: string data,
 }
 
 /*

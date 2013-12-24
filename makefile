@@ -28,7 +28,7 @@ PROJ_L_MEXE=$(PROJ_L)
 # CPPPROJ_L = 
 #[req] include and marco definition for this project
 #e.g. PROJ_I = -I../include -I../../3rdParty/include/boost/ -I/usr/include/python2.6  
-PROJ_I =  -I/usr/local/include -I./common 
+PROJ_I =  -I/usr/local/include 
 #[opt] the special flags for project
 #e.g. PROJ_F = -D_REENTRANT -DFLEX -D_GNU_SOURCE -DLINUX -fpic 
 PROJ_F = -DHAVE_NETINET_IN_H #-v
