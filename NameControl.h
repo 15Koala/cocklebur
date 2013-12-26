@@ -27,10 +27,10 @@ private:
     queue < LogEntry > d_operation_queue;//< operation queue
     int low32_xid;//< the sequence number of operations
     pthread_rwlock_t m_operation_queue;//< queue lock
-    /// scan data dir and find out who is the lastest.
-    string findLastestLogName( const string & data_dir_name );
 public:
 
+    /// scan data dir and find out who is the lastest.
+    string findLastestLogName( const string & data_dir_name );
     NameControl();
     ~NameControl();
     // 1. find lastest log file.

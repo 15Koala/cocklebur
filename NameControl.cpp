@@ -1,10 +1,18 @@
 #include "NameControl.h"
 #include "gen-cpp/DataServ.h"
 
+#include <cstring>
+#include <cstdlib>
+#include <dirent.h>
+#include <sys/stat.h>
+
 #include <thrift/protocol/TBinaryProtocol.h>
 #include <thrift/server/TSimpleServer.h>
 #include <thrift/transport/TServerSocket.h>
 #include <thrift/transport/TBufferTransports.h>
+
+#include "CockNodeTree.h"
+#include "utils.h"
 
 using namespace ::apache::thrift;
 using namespace ::apache::thrift::protocol;
@@ -82,6 +90,16 @@ int startNameSpaceServer(void * p) {
 }
 
 // NameControl functions
+NameControl::NameControl(): isReady(false) {
+
+}
+
+NameControl::~NameControl() {
+
+    delete d_cock_node_tree;
+    pthread_rwlock_destroy( &m_operation_queue );
+}
+
 int NameControl::putEntry( const LogEntry & log_entry ) {
 
 }
@@ -91,9 +109,41 @@ LogEntry NameControl::getEntry() {
 }
 
 long NameControl::init( const string & data_dir_name ) {
+    // if there is no logs and matched snapshots. we should initial
+    // datatree automatically. Touch snapshots and create a log file
+    // for datatree.
+    if( access( data_dir_name.c_str(), 0 ) != 0 ) 
+	mkdir(data_dir_name.c_str(), 0775);
 
+    string max_prefix = findLastestLogName( data_dir_name );
+    if( max_prefix != "" ) {
+	cout<<"_DEBUG: find lastest cache files with prefix "<<max_prefix<<endl;
+       // we have some data cached, so rebuld datatree.	
+	d_cock_node_tree = new CockNodeTree( max_prefix + ".csnapshot" );
+    } else {
+	cout<<"_DEBUG: find nothing cached in dictory "<<data_dir_name<<endl;
+	// nothing cached in data dir
+	d_cock_node_tree = new CockNodeTree(0);
+	d_cock_node_tree->nodeCreate("/root");
+    }
 }
 
 string NameControl::findLastestLogName( const string & data_dir_name ) {
-
+    DIR * dir;
+    struct dirent *s_dir;
+    dir=opendir( data_dir_name.c_str() );
+    string cur_latest_file_name;
+    while((s_dir = readdir(dir)) != NULL)
+    {
+	if((strcmp(s_dir->d_name,".")==0) || (strcmp(s_dir->d_name,"..")==0)){
+	    continue;
+	}
+	string t_s(s_dir->d_name);
+	if( t_s > cur_latest_file_name ) {
+	    cur_latest_file_name = s_dir->d_name;
+	}
+    }
+    vector<string> tmp;
+    str_split(tmp,cur_latest_file_name,'.');
+    return tmp[0];
 }

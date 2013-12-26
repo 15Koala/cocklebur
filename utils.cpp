@@ -25,6 +25,11 @@ using boost::shared_ptr;
 using namespace std;
 
 void str_split(vector<string> & vec, const string & s, char sep){
+    vec.clear();
+    if( s.find(sep) == string::npos ) {
+	vec.push_back( s );
+    }
+    
     int last = 0;
     for(int i=0; i <= s.size(); i++){
 	if(s[i] == sep || i == s.size() ){
@@ -34,6 +39,11 @@ void str_split(vector<string> & vec, const string & s, char sep){
     }
 }
 void str_split(vector<string> & vec, const string & s, char sep, bool ignore_space){
+    vec.clear();
+    if( s.find(sep) == string::npos ) {
+	vec.push_back( s );
+    }
+
     if(!ignore_space)
 	str_split(vec,s,sep);
     else{
@@ -57,6 +67,13 @@ void xid_to_hex_string(string & s, long xid){
       s = tmp + s;
   }
 }
+
+long hex_string_to_xid(const string & s) {
+    for(int i=0; i<s.size();++i){
+	
+    }
+}
+
 long xid_high_32_add(long xid, long a){
     long tmp = a << 32;
     cout<<xid+tmp<<endl;

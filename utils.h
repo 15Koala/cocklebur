@@ -27,6 +27,7 @@ void str_split(vector<string> & vec, const string & s, char sep);
 void str_split(vector<string> & vec, const string & s, char sep, bool ignore_space);
 
 void xid_to_hex_string(string & s, long xid);
+long hex_string_to_xid(const string & s);
 long xid_high_32_add(long xid, long a);
 long xid_low_32_add(long xid, long a);
 int xid_get_high_32(long xid);
