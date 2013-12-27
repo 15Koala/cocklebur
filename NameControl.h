@@ -12,6 +12,7 @@
 #include <pthread.h>
 #include <string>
 #include <queue>
+#include <map>
 
 using namespace std;
 
@@ -25,8 +26,9 @@ private:
     CockNodeTree * d_cock_node_tree;//< mem namespace
 
     queue < LogEntry > d_operation_queue;//< operation queue
-    int low32_xid;//< the sequence number of operations
+    int cur_seq_num;
     pthread_rwlock_t m_operation_queue;//< queue lock
+    map< int, pthread_rwlock_t> notify_map;//< log_seq => wait_lock
 public:
 
     /// scan data dir and find out who is the lastest.

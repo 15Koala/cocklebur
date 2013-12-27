@@ -6,6 +6,8 @@
 #include <dirent.h>
 #include <sys/stat.h>
 
+#include <map>
+
 #include <thrift/protocol/TBinaryProtocol.h>
 #include <thrift/server/TSimpleServer.h>
 #include <thrift/transport/TServerSocket.h>
@@ -20,6 +22,7 @@ using namespace ::apache::thrift::transport;
 using namespace ::apache::thrift::server;
 
 using boost::shared_ptr;
+using namespace std;
 
 // NameSpaceServer 
 // wrapper NameSpace as a server. 
@@ -34,8 +37,8 @@ public:
     }
 
     int32_t nodeCreate(const std::string& path, const bool isBlocked) {
-	// Your implementation goes here
-	printf("nodeCreate\n");
+	
+	return 0;
     }
 
     int32_t nodeDelete(const std::string& path) {
@@ -76,7 +79,7 @@ public:
 };
 
 int startNameSpaceServer(void * p) {
-    NameControl * ns;
+    NameControl * ns = reinterpret_cast<NameControl *>(p);
     int port = 9090;
     shared_ptr<NameSpaceServer> handler(new NameSpaceServer(ns));
     shared_ptr<TProcessor> processor(new DataServProcessor(handler));
@@ -101,11 +104,32 @@ NameControl::~NameControl() {
 }
 
 int NameControl::putEntry( const LogEntry & log_entry ) {
-
+    int ret = 0;
+    pthread_rwlock_wrlock( &m_operation_queue );
+    LogEntry t_log_entry = log_entry;// copy log entry
+    if( cur_seq_num + 1 == xid_get_low_32( log_entry.xid ) ) {
+	// accept
+	d_operation_queue.push( t_log_entry );
+	cur_seq_num ++;
+    } else {
+	// refuse
+	ret = 1;
+    }
+    pthread_rwlock_unlock( &m_operation_queue );
+    return ret;
 }
 
 LogEntry NameControl::getEntry() {
-
+    LogEntry log_entry;
+    pthread_rwlock_wrlock( &m_operation_queue );
+    if( !d_operation_queue.size() ) {
+	log_entry = d_operation_queue.front();
+	d_operation_queue.pop();
+    } else {
+	log_entry.xid = 0;
+    }
+    pthread_rwlock_unlock( &m_operation_queue );
+    return log_entry;
 }
 
 long NameControl::init( const string & data_dir_name ) {
@@ -126,6 +150,8 @@ long NameControl::init( const string & data_dir_name ) {
 	d_cock_node_tree = new CockNodeTree(0);
 	d_cock_node_tree->nodeCreate("/root");
     }
+    // initial current queue seq num
+    cur_seq_num = xid_get_low_32( d_cock_node_tree->getCurXid() );
 }
 
 string NameControl::findLastestLogName( const string & data_dir_name ) {
